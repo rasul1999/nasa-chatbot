@@ -45,10 +45,14 @@ def load_model():
     model.load_weights('model.h5')
     model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
 
+    print('Loaded model')
+
     return model
 
 
 def predict_class(model, image_path):
+
+    print('predicting image')
 
     image_file = image.load_img(image_path, target_size=(64, 64))
     image_file = image.img_to_array(image_file)
@@ -69,7 +73,7 @@ def predict_class(model, image_path):
     else:
         return 'residential_fire'
 
-# model = load_model()
+model = load_model()
 
 
 #We will receive messages that Facebook sends our bot at this endpoint
@@ -89,6 +93,7 @@ def receive_message():
           for message in messaging:
             if message.get('message'):
                 #Facebook Messenger ID for user so we know where to send response back to
+                print('Received message')
                 recipient_id = message['sender']['id']
                 if message['message'].get('text'):
                     response_sent_text = 'Please send media file showing fire accident'
