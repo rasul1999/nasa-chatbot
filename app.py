@@ -70,7 +70,7 @@ def predict_class(model, image_path):
         return 'residential_fire'
 
 
-model = load_model()
+# model = load_model()
 
 
 #We will receive messages that Facebook sends our bot at this endpoint
