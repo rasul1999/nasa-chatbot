@@ -1,13 +1,9 @@
 #Python libraries that we need to import for our bot
-import random
 from flask import Flask, request
 from pymessenger.bot import Bot
 
 import os, shutil
-
-from tensorflow.keras.preprocessing import image
-from tensorflow.keras.models import model_from_json
-import numpy as np
+from predict import load_model, get_model, predict_class
 
 import os
 import urllib.request
@@ -20,56 +16,11 @@ VERIFY_TOKEN = 'Salam'   #VERIFY_TOKEN = os.environ['VERIFY_TOKEN']
 bot = Bot (ACCESS_TOKEN)
 
 
-model = None
-
-
-def load_model():
-
-    with open("model.json", 'r') as model_file:
-        model_json = model_file.read()
-
-    model = model_from_json(model_json)
-
-    model.load_weights('model.h5')
-    model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
-
-    print('Loaded model')
-
-    return model
-
-
-def predict_class(model, image_path):
-
-    print('predicting image')
-
-    image_file = image.load_img(image_path, target_size=(64, 64))
-    image_file = image.img_to_array(image_file)
-    image_file = np.expand_dims(image_file, axis=0)
-    result = model.predict(image_file)[0]
-    
-    max_pred, max_class = 0, 0
-
-    for i in range(len(result)):
-        if result[i] > max_pred:
-            max_pred = result[i]
-            max_class = i
-
-    if max_class == 0:
-        return 'other'
-    elif max_class == 1:
-        return 'wild_fire'
-    else:
-        return 'residential_fire'
-
-
 #We will receive messages that Facebook sends our bot at this endpoint
 @app.route("/", methods=['GET', 'POST'])
 def receive_message():
 
     print('Received request')
-
-    if model is None:
-        model = load_model()
 
     if request.method == 'GET':
         """Before allowing people to message your bot, Facebook has implemented a verify token
@@ -93,6 +44,7 @@ def receive_message():
                 #if user sends us a GIF, photo,video, or any other non-text item
                 attachments = message['message'].get('attachments')
                 if attachments:
+                    print('Received attachment')
                     response_sent_nontext = 'Thanks for informing us. We will make feedback as soon as possible'
                     image_url = attachments[0].payload.url
                     urllib.request.urlretrieve(image_url, "image.jpg")
