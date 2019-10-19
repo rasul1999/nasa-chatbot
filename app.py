@@ -80,9 +80,9 @@ def receive_message():
         that confirms all requests that your bot receives came from Facebook."""
         token_sent = request.args.get("hub.verify_token")
         return verify_fb_token(token_sent)
-    #if the request was not get, it must be POST and we can just proceed with sending a message back to user
+    # if the request was not get, it must be POST and we can just proceed with sending a message back to user
     else:
-        # get whatever message a user sent the bot
+    # get whatever message a user sent the bot
        output = request.get_json()
        for event in output['entry']:
           messaging = event['messaging']
@@ -94,12 +94,14 @@ def receive_message():
                     response_sent_text = 'Please send media file showing fire accident'
                     send_message(recipient_id, response_sent_text)
                 #if user sends us a GIF, photo,video, or any other non-text item
-                if message['message'].get('attachments'):
+                attachments = message['message'].get('attachments')
+                if attachments:
                     response_sent_nontext = 'Thanks for informing us. We will make feedback as soon as possible'
-                    image_url = message['message'].get('attachments')[0].payload.url
+                    image_url = attachments[0].payload.url
                     urllib.request.urlretrieve(image_url, "image.jpg")
                     image_class = predict_class(model, 'image.jpg')
                     send_message(recipient_id, image_class)
+                    
     return "Message Processed"
 
 
