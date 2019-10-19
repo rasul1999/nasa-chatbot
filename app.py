@@ -34,17 +34,17 @@ bot = Bot (ACCESS_TOKEN)
 
 
 
-# def load_model():
+def load_model():
 
-#     with open("model.json", 'r') as model_file:
-#         model_json = model_file.read()
+    with open("model.json", 'r') as model_file:
+        model_json = model_file.read()
 
-#     model = model_from_json(model_json)
+    model = model_from_json(model_json)
 
-#     model.load_weights('model.h5')
-#     model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
+    model.load_weights('model.h5')
+    model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
 
-#     return model
+    return model
 
 
 
@@ -70,7 +70,7 @@ def predict_class(model, image_path):
         return 'residential_fire'
 
 
-# model = load_model()
+model = load_model()
 
 
 #We will receive messages that Facebook sends our bot at this endpoint
