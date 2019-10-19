@@ -3,6 +3,25 @@ import random
 from flask import Flask, request
 from pymessenger.bot import Bot
 
+import os, shutil
+
+import tensorflow as tf
+from tensorflow.keras import layers
+from tensorflow.keras import preprocessing
+from tensorflow.keras import models
+from tensorflow.keras.layers import Conv2D
+from tensorflow.keras.layers import Dense
+from tensorflow.keras.layers import Flatten
+from tensorflow.keras.layers import Activation
+from tensorflow.keras.layers import Dropout
+from tensorflow.keras.applications import VGG16
+from tensorflow.keras.preprocessing import image
+from tensorflow.keras.layers import MaxPooling2D
+from tensorflow.keras.models import Sequential
+import matplotlib.pyplot as plt
+from tensorflow.keras.preprocessing.image import ImageDataGenerator
+import numpy as np
+
 import os
 import urllib.request
 
@@ -17,7 +36,7 @@ bot = Bot (ACCESS_TOKEN)
 
 def load_model():
 
-    with open(model.json, 'r') as model_file:
+    with open("model.json", 'r') as model_file:
         model_json = model_file.read()
 
     model = model_from_json(model_json)
@@ -31,10 +50,10 @@ def load_model():
 
 def predict_class(model, image_path):
 
-    image = image.load_img(image_path, target_size=(64, 64))
-    image = image.img_to_array(test_image)
-    image = np.expand_dims(test_image, axis=0)
-    result = classifier.predict(test_image)
+    image_file = image.load_img(image_path, target_size=(64, 64))
+    image_file = image.img_to_array(image_file)
+    image_file = np.expand_dims(image_file, axis=0)
+    result = model.predict(image_file)
     
     max_pred, max_class = 0, 0
 
