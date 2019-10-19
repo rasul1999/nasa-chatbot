@@ -5,22 +5,8 @@ from pymessenger.bot import Bot
 
 import os, shutil
 
-import tensorflow as tf
-from tensorflow.keras import layers
-from tensorflow.keras import preprocessing
-from tensorflow.keras import models
-from tensorflow.keras.layers import Conv2D
-from tensorflow.keras.layers import Dense
-from tensorflow.keras.layers import Flatten
-from tensorflow.keras.layers import Activation
-from tensorflow.keras.layers import Dropout
-from tensorflow.keras.applications import VGG16
 from tensorflow.keras.preprocessing import image
-from tensorflow.keras.layers import MaxPooling2D
-from tensorflow.keras.models import Sequential
 from tensorflow.keras.models import model_from_json
-import matplotlib.pyplot as plt
-from tensorflow.keras.preprocessing.image import ImageDataGenerator
 import numpy as np
 
 import os
@@ -33,6 +19,8 @@ ACCESS_TOKEN = 'EAAiZCfSvRvfYBANMBt3E5EqDckFrPEG1BvRQeJ8emrh9mmHbGYQjFVmgdln9jZB
 VERIFY_TOKEN = 'Salam'   #VERIFY_TOKEN = os.environ['VERIFY_TOKEN']
 bot = Bot (ACCESS_TOKEN)
 
+
+model = None
 
 
 def load_model():
@@ -73,14 +61,16 @@ def predict_class(model, image_path):
     else:
         return 'residential_fire'
 
-model = load_model()
-
 
 #We will receive messages that Facebook sends our bot at this endpoint
 @app.route("/", methods=['GET', 'POST'])
 def receive_message():
 
     print('Received request')
+
+    if model is None:
+        model = load_model()
+
     if request.method == 'GET':
         """Before allowing people to message your bot, Facebook has implemented a verify token
         that confirms all requests that your bot receives came from Facebook."""
