@@ -18,6 +18,7 @@ from tensorflow.keras.applications import VGG16
 from tensorflow.keras.preprocessing import image
 from tensorflow.keras.layers import MaxPooling2D
 from tensorflow.keras.models import Sequential
+from tensorflow.keras.models import model_from_json
 import matplotlib.pyplot as plt
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
 import numpy as np
@@ -47,19 +48,18 @@ def load_model():
     return model
 
 
-
 def predict_class(model, image_path):
 
     image_file = image.load_img(image_path, target_size=(64, 64))
     image_file = image.img_to_array(image_file)
     image_file = np.expand_dims(image_file, axis=0)
-    result = model.predict(image_file)
+    result = model.predict(image_file)[0]
     
     max_pred, max_class = 0, 0
 
     for i in range(len(result)):
-        if pred > max_pred:
-            max_pred = pred
+        if result[i] > max_pred:
+            max_pred = result[i]
             max_class = i
 
     if max_class == 0:
@@ -68,7 +68,6 @@ def predict_class(model, image_path):
         return 'wild_fire'
     else:
         return 'residential_fire'
-
 
 model = load_model()
 
