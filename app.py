@@ -36,19 +36,22 @@ def receive_message():
           for message in messaging:
             if message.get('message'):
                 #Facebook Messenger ID for user so we know where to send response back to
-                print('Received message')
                 recipient_id = message['sender']['id']
                 if message['message'].get('text'):
+                    print('Received message')
                     response_sent_text = 'Please send media file showing fire accident'
                     send_message(recipient_id, response_sent_text)
                 #if user sends us a GIF, photo,video, or any other non-text item
                 attachments = message['message'].get('attachments')
-                if attachments:
+                if len(attachments) != 0:
                     print('Received attachment')
                     response_sent_nontext = 'Thanks for informing us. We will make feedback as soon as possible'
                     image_url = attachments[0].payload.url
+                    print('Got url')
                     urllib.request.urlretrieve(image_url, "image.jpg")
+                    print('Retrieved image')
                     image_class = predict_class(model, 'image.jpg')
+                    print('Predicted class')
                     send_message(recipient_id, image_class)
 
     return "Message Processed"
