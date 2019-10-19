@@ -69,7 +69,7 @@ def predict_class(model, image_path):
     else:
         return 'residential_fire'
 
-model = load_model()
+# model = load_model()
 
 
 #We will receive messages that Facebook sends our bot at this endpoint
@@ -101,7 +101,7 @@ def receive_message():
                     urllib.request.urlretrieve(image_url, "image.jpg")
                     image_class = predict_class(model, 'image.jpg')
                     send_message(recipient_id, image_class)
-                    
+
     return "Message Processed"
 
 
